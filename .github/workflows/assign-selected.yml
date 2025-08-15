@@ -22,7 +22,7 @@ jobs:
 
             // Собираем словарь "@login - Имя, Роль" -> login
             const people = JSON.parse(fs.readFileSync('data/assignees.json', 'utf8'));
-            const labelFor = (p) => `@${p.login} - ${p.name}${p.role ? ', ' + p.role : ''}`;
+            const labelFor = (p) => `"@${p.login}" - ${p.name}${p.role ? ', ' + p.role : ''}`;
             const dict = new Map(people.map(p => [labelFor(p), p.login]));
 
             // Ищем секцию "Исполнители"
