@@ -1,0 +1,6 @@
+[
+  { "login": "user1", "label": "Иван Петров — Backend" },
+  { "login": "user2", "label": "Мария Смирнова — Frontend" },
+  { "login": "user3", "label": "Сергей Иванов — QA" },
+  { "login": "user4", "label": "Алина Ким — PM" }
+]
