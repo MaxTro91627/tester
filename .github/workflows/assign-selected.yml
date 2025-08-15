@@ -1,0 +1,46 @@
+name: Assign selected assignees
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  assign:
+    permissions:
+      issues: write   # нужно право на запись в issues
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse form and assign
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+
+            // Находим секцию "### Исполнители" до следующего "###" или конца текста
+            const sectionMatch = body.match(/###\s*Исполнители[\s\S]*?(?=\n###\s|\n?$)/);
+            if (!sectionMatch) {
+              core.info("Секция 'Исполнители' не найдена — ничего не делаем");
+              return;
+            }
+
+            // В Issue Forms выбранные пункты рендерятся как чек-лист "- [x] user"
+            const picked = [...sectionMatch[0].matchAll(/-\s*\[x\]\s*(@?[A-Za-z0-9-]+)/g)]
+              .map(m => m[1].replace(/^@/, "")); // убираем @ если автор вводил руками
+
+            // фильтр от дублей и ограничение GitHub (до 10 исполнителей на issue)
+            const unique = [...new Set(picked)].slice(0, 10);
+
+            if (unique.length === 0) {
+              core.info("Исполнители не выбраны — выходим.");
+              return;
+            }
+
+            core.info(`Назначаем: ${unique.join(", ")}`);
+
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              assignees: unique
+            });
