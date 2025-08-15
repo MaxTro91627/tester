@@ -20,22 +20,18 @@ jobs:
             const issue = context.payload.issue;
             const body  = issue.body || "";
 
-            // Собираем словарь "@login - Имя, Роль" -> login
             const people = JSON.parse(fs.readFileSync('data/assignees.json', 'utf8'));
             const labelFor = (p) => `@${p.login} - ${p.name}${p.role ? ', ' + p.role : ''}`;
             const dict = new Map(people.map(p => [labelFor(p), p.login]));
 
-            // Ищем секцию "Исполнители"
             const sec = body.match(/###\s*Исполнители[\s\S]*?(?=\n###\s|\n*$)/);
             if (!sec) { core.info("Нет секции 'Исполнители'"); return; }
 
-            // В Issue Forms выбранные пункты рендерятся как чек-лист "- [x] ..."
             const pickedLabels = [...sec[0].matchAll(/-\s*\[x\]\s*(.+)\s*$/gm)].map(m => m[1].trim());
 
             const assignees = [];
             for (const lbl of pickedLabels) {
               if (dict.has(lbl)) { assignees.push(dict.get(lbl)); continue; }
-              // fallback: попробуем вытащить @login явно
               const m = lbl.match(/@([A-Za-z0-9-]+)/);
               if (m) assignees.push(m[1]);
             }
