@@ -16,7 +16,9 @@ body:
     id: context
     attributes:
       label: Контекст
-      description: Вводные про задачу для общего понимания
+      description: |
+        Вводные про задачу для общего понимания.
+        Зачем нужна задача? Какую проблему решаем? Для кого?
       placeholder: Зачем нужна задача? Какую проблему решаем? Для кого?
     validations:
       required: true
@@ -25,7 +27,8 @@ body:
     id: dependencies
     attributes:
       label: Зависимости
-      description: Ссылки на зависимые задачи и комментарии
+      description: |
+        Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать.
       placeholder: |
         Примеры:
         - Зависит от: #123, #456
@@ -56,11 +59,13 @@ body:
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
-      render: markdown
+      description: |
+        Как поймём, что эпик завершён? Критерии приёмки.
       placeholder: |
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
+      render: markdown
     validations:
       required: true
 
@@ -74,7 +79,9 @@ body:
     id: assignees
     attributes:
       label: Исполнители
-      description: Кого назначить на задачу (можно выбрать нескольких)
+      description: |
+        Кого назначить на задачу (можно выбрать нескольких).
+        Список генерируется из data/assignees.json.
       multiple: true
       options:
 {{ASSIGNEE_OPTIONS}}
