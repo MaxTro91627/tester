@@ -1,1 +1,89 @@
+# AUTO-GENERATED TARGET: .github/ISSUE_TEMPLATE/project_task.yml
+# Источник списка исполнителей: data/assignees.json
+# Не редактируй project_task.yml вручную — правь template.yml и JSON.
 
+name: Задача уровня проекта
+description: Шаблон для больших проектных задач (эпиков)
+title: "[EPIC] "
+labels: ["epic"]
+
+body:
+  - type: markdown
+    attributes:
+      value: "Заполни форму ниже. Поля с * обязательны."
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: |
+        Вводные про задачу для общего понимания.
+        Зачем нужна задача? Какую проблему решаем? Для кого?
+      placeholder: Зачем нужна задача? Какую проблему решаем? Для кого?
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Зависимости
+      description: |
+        Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать.
+      placeholder: |
+        Примеры:
+        - Зависит от: #123, #456
+        - Блокирует: #789
+        Комментарии: ...
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: subtasks
+    attributes:
+      label: Подзадачи
+      description: |
+        Этот блок автоматически зеркалит системный список **Sub-issues**.
+        Не редактируй его руками — он перезаписывается workflow.
+      value: |
+        ### Подзадачи
+
+        <!-- SUBISSUES-MIRROR:START -->
+        _Здесь появится список sub-issues после сохранения задачи._
+        <!-- SUBISSUES-MIRROR:END -->
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Краткое описание ожидаемого результата
+      description: |
+        Как поймём, что эпик завершён? Критерии приёмки.
+      placeholder: |
+        - Пользователь может …
+        - Отчёт доступен по …
+        - Метрика X ≥ Y
+      render: markdown
+    validations:
+      required: true
+
+  - type: input
+    id: due
+    attributes:
+      label: Целевая дата (если есть)
+      placeholder: "YYYY-MM-DD"
+
+  - type: dropdown
+    id: assignees
+    attributes:
+      label: Исполнители
+      description: |
+        Кого назначить на задачу (можно выбрать нескольких).
+        Список генерируется из data/assignees.json.
+      multiple: true
+      options:
+# {{ASSIGNEE_OPTIONS}}
+    validations:
+      required: false
