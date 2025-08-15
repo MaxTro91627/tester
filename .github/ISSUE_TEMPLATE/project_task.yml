@@ -79,7 +79,8 @@ body:
       label: Исполнители
       description: Кого назначить на задачу (можно выбрать нескольких)
       multiple: true
-      options:         - Алина Ким — PM
+      options:
+        - Алина Ким — PM
         - Иван Петров — Backend
         - Мария Смирнова — Frontend
         - Сергей Иванов — QA
