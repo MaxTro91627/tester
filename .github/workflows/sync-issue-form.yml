@@ -31,10 +31,8 @@ jobs:
               return;
             }
 
-            // Сортируем по label для стабильного вывода
             people.sort((a,b)=> (a.label || a.login).localeCompare(b.label || b.login, 'ru'));
 
-            // Готовим блок options с нужными отступами
             const options = people
               .map(p => `        - ${p.label || p.login}`)
               .join('\n');
@@ -50,7 +48,6 @@ jobs:
 
             fs.writeFileSync(outPath, result, 'utf8');
             core.info('project_task.yml сгенерирован');
-
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
