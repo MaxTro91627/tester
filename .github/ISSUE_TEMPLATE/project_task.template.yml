@@ -40,12 +40,11 @@ body:
     id: subtasks
     attributes:
       label: Подзадачи
-      description: Ссылки на саб-issues, которые определяют содержание этой большой задачи
+      description: Ссылки на саб-issues; эта секция будет перезаписываться автоматически
       placeholder: |
-        - [ ] #101 — Подзадача 1
-        - [ ] #102 — Подзадача 2
-      value: |
         - [ ] # — Подзадача
+      value: |
+        _Секция генерируется автоматически из подзадач._
       render: markdown
     validations:
       required: true
