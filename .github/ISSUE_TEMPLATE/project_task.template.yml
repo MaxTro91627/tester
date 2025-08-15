@@ -84,6 +84,6 @@ body:
         Список генерируется из data/assignees.json.
       multiple: true
       options:
-{{ASSIGNEE_OPTIONS}}
+# {{ASSIGNEE_OPTIONS}}
     validations:
       required: false
