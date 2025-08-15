@@ -20,34 +20,27 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-
             const jsonPath = path.join(process.cwd(), 'data/assignees.json');
             const tplPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE/project_task.template.yml');
             const outPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE/project_task.yml');
 
             const people = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-            if (!Array.isArray(people)) {
-              core.setFailed('data/assignees.json должен быть массивом объектов {login,label}');
-              return;
-            }
+            if (!Array.isArray(people)) core.setFailed('data/assignees.json должен быть массивом');
 
-            people.sort((a,b)=> (a.label || a.login).localeCompare(b.label || b.login, 'ru'));
+            people.sort((a,b)=> (a.name || a.login).localeCompare(b.name || b.login, 'ru'));
 
-            const options = people
-              .map(p => `        - ${p.label || p.login}`)
-              .join('\n');
+            const labelFor = (p) => `@${p.login} - ${p.name}${p.role ? ', ' + p.role : ''}`;
+            const options = people.map(p => `        - ${labelFor(p)}`).join('\n');
 
             let template = fs.readFileSync(tplPath, 'utf8');
-            if (!template.includes('{{ASSIGNEE_OPTIONS}}')) {
-              core.setFailed('В template.yml не найден плейсхолдер {{ASSIGNEE_OPTIONS}}');
-              return;
-            }
+            if (!template.includes('{{ASSIGNEE_OPTIONS}}')) core.setFailed('Нет плейсхолдера {{ASSIGNEE_OPTIONS}}');
 
-            const banner = '# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ ВРУЧНУЮ\n';
+            const banner = '# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ РУКАМИ\n';
             const result = banner + template.replace('{{ASSIGNEE_OPTIONS}}', options);
 
             fs.writeFileSync(outPath, result, 'utf8');
             core.info('project_task.yml сгенерирован');
+
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
