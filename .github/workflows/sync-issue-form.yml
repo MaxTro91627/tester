@@ -36,7 +36,7 @@ jobs:
             if (!template.includes('{{ASSIGNEE_OPTIONS}}')) core.setFailed('Нет плейсхолдера {{ASSIGNEE_OPTIONS}}');
 
             const banner = '# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ РУКАМИ\n';
-            const result = banner + template.replace('{{ASSIGNEE_OPTIONS}}', options);
+            const result = banner + template.replace('- {{ASSIGNEE_OPTIONS}}', options);
 
             fs.writeFileSync(outPath, result, 'utf8');
             core.info('project_task.yml сгенерирован');
