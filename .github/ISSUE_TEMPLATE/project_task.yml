@@ -1,4 +1,4 @@
-# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ ВРУЧНУЮ
+# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ РУКАМИ
 # AUTO-GENERATED TARGET: .github/ISSUE_TEMPLATE/project_task.yml
 # Источник списка исполнителей: data/assignees.json
 # Не редактируй project_task.yml вручную — правь template.yml и JSON.
@@ -17,7 +17,9 @@ body:
     id: context
     attributes:
       label: Контекст
-      description: Вводные про задачу для общего понимания
+      description: |
+        Вводные про задачу для общего понимания.
+        Зачем нужна задача? Какую проблему решаем? Для кого?
       placeholder: Зачем нужна задача? Какую проблему решаем? Для кого?
     validations:
       required: true
@@ -26,7 +28,8 @@ body:
     id: dependencies
     attributes:
       label: Зависимости
-      description: Ссылки на зависимые задачи и комментарии
+      description: |
+        Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать.
       placeholder: |
         Примеры:
         - Зависит от: #123, #456
@@ -57,11 +60,13 @@ body:
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
-      render: markdown
+      description: |
+        Как поймём, что эпик завершён? Критерии приёмки.
       placeholder: |
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
+      render: markdown
     validations:
       required: true
 
@@ -75,12 +80,14 @@ body:
     id: assignees
     attributes:
       label: Исполнители
-      description: Кого назначить на задачу (можно выбрать нескольких)
+      description: |
+        Кого назначить на задачу (можно выбрать нескольких).
+        Список генерируется из data/assignees.json.
       multiple: true
       options:
-        - @MaxTro91627
-        - ivan-petrov
-        - maria-smirnova
-        - sergey-ivanov
+        - @ivan-petrov - Иван Петров, Backend
+        - @maria-smirnova - Мария Смирнова, Frontend
+        - @sergey-ivanov - Сергей Иванов, QA
+        - @@MaxTro91627 - Троицкий Максим, PM
     validations:
       required: false
