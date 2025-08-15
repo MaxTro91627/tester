@@ -84,7 +84,7 @@ body:
         Кого назначить на задачу (можно выбрать нескольких).
         Список генерируется из data/assignees.json.
       multiple: true
-      options: 
+      options:
         - @ivan-petrov - Иван Петров, Backend
         - @maria-smirnova - Мария Смирнова, Frontend
         - @sergey-ivanov - Сергей Иванов, QA
