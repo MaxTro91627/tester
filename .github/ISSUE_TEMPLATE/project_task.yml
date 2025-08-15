@@ -85,9 +85,9 @@ body:
         Список генерируется из data/assignees.json.
       multiple: true
       options:
-        - `@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`
-        - `@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`
-        - `@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`
-        - `@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`
+        - "@ivanpetrov, Иван Петров, Backend"
+        - "@mariasmirnova, Мария Смирнова, Frontend"
+        - "@sergeyivanov, Сергей Мойшаk, QA"
+        - "@MaxTro91627, Троицкий Максим, PM"
     validations:
       required: false
