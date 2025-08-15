@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'data/assignees.json'
-      - '.github/ISSUE_TEMPLATE/project_task.template.yml'
+      - '.github/ISSUE_TEMPLATE_SRC/project_task.template.yml'
   workflow_dispatch:
 
 jobs:
@@ -22,8 +22,9 @@ jobs:
             const path = require('path');
 
             const jsonPath = path.join(process.cwd(), 'data/assignees.json');
-            const tplPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE/project_task.template.yml');
+            const tplPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE_SRC/project_task.template.yml');
             const outPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE/project_task.yml');
+
 
             const people = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
             if (!Array.isArray(people)) {
