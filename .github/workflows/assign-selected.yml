@@ -21,7 +21,7 @@ jobs:
             const body  = issue.body || "";
 
             const people = JSON.parse(fs.readFileSync('data/assignees.json', 'utf8'));
-            const labelFor = (p) => `@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`;
+            const labelFor = (p) => `@${p.login} + ', ' + ${p.name}${p.role ? ', ' + p.role : ''}`;
             const dict = new Map(people.map(p => [labelFor(p), p.login]));
 
             const sec = body.match(/###\s*Исполнители[\s\S]*?(?=\n###\s|\n*$)/);
