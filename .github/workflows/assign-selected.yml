@@ -53,23 +53,13 @@ jobs:
             const logins = [];
             for (const lbl of pickedLabels) {
               if (/^@?[A-Za-z0-9-]+$/.test(lbl)) {
-                // если пользователь ввёл чистый логин
                 logins.push(lbl.replace(/^@/, ''));
                 continue;
               }
-              // пробуем вытащить @login из текста
               const m = lbl.match(/@([A-Za-z0-9-]+)/);
-              if (m) {
-                logins.push(m[1]);
-                continue;
-              }
-              // иначе ищем точное совпадение по словарю label->login
+              if (m) { logins.push(m[1]); continue; }
               const login = dict.get(lbl);
-              if (login) {
-                logins.push(login);
-              } else {
-                core.info(`Не удалось сопоставить "${lbl}" со списком исполнителей`);
-              }
+              if (login) logins.push(login);
             }
 
             const unique = [...new Set(logins)].slice(0, 10);
