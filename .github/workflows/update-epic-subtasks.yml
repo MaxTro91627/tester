@@ -1,0 +1,91 @@
+name: Update epic subtasks section
+on:
+  issues:
+    types: [opened, edited, reopened, closed, labeled, unlabeled]
+
+jobs:
+  update-epic:
+    permissions:
+      issues: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update parent's "Подзадачи" section
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+            const issue = context.payload.issue;
+
+            // Берём номер эпика из ТЕКУЩЕЙ задачи (если это подзадача)
+            function extractParentNumberFromBody(body) {
+              if (!body) return null;
+              // Берём секцию "Родительский эпик"
+              const sec = body.match(/###\s*Родительский эпик[\s\S]*?(?=\n###\s|\n*$)/);
+              const text = sec ? sec[0] : body;
+              // Ищем #123 или .../issues/123
+              let m = text.match(/#(\d+)/);
+              if (!m) m = text.match(/\/issues\/(\d+)/);
+              return m ? parseInt(m[1], 10) : null;
+            }
+
+            // Это событие нас интересует только если речь о подзадаче
+            const isSubtask = (issue.labels || []).some(l => (l.name || l).toString() === 'subtask');
+            if (!isSubtask) {
+              core.info('Не подзадача — пропускаем.');
+              return;
+            }
+
+            const parentNumber = extractParentNumberFromBody(issue.body || '');
+            if (!parentNumber) {
+              core.info('У подзадачи не найден Родительский эпик — пропускаем.');
+              return;
+            }
+
+            // Забираем ВСЕ подзадачи репозитория и отфильтровываем по родителю
+            const all = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'all', labels: 'subtask', per_page: 100
+            });
+
+            const children = all.filter(it => extractParentNumberFromBody(it.body || '') === parentNumber);
+
+            // Формируем чек-лист
+            // Открытые вверх, затем закрытые; сортируем по номеру (или дате)
+            children.sort((a,b) => {
+              if (a.state !== b.state) return a.state === 'open' ? -1 : 1;
+              return a.number - b.number;
+            });
+
+            const lines = children.map(ch => {
+              const box = ch.state === 'closed' ? '[x]' : '[ ]';
+              return `- ${box} #${ch.number} — ${ch.title}`;
+            });
+
+            const listBlock = lines.length ? lines.join('\n') : '_Пока нет подзадач._';
+
+            // Получаем эпик и заменяем/вставляем его секцию "### Подзадачи"
+            const parent = await github.rest.issues.get({ owner, repo, issue_number: parentNumber });
+            const body = parent.data.body || '';
+
+            const header = '### Подзадачи';
+            const section = `\n${header}\n\n${listBlock}\n`;
+
+            const re = new RegExp(`(^|\\n)${header}[\\s\\S]*?(?=\\n###\\s|$)`, 'm');
+            let newBody;
+            if (re.test(body)) {
+              newBody = body.replace(re, section.trim());
+            } else {
+              newBody = (body.trim() + '\n\n' + section.trim()).trim() + '\n';
+            }
+
+            if (newBody !== body) {
+              await github.rest.issues.update({
+                owner, repo, issue_number: parentNumber, body: newBody
+              });
+              core.info(`Эпик #${parentNumber}: секция 'Подзадачи' обновлена (${children.length} шт.).`);
+            } else {
+              core.info('Нет изменений для секции Подзадачи.');
+            }
