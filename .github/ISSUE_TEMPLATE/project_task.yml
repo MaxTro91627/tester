@@ -1,3 +1,7 @@
+# AUTO-GENERATED TARGET: .github/ISSUE_TEMPLATE/project_task.yml
+# Источник списка исполнителей: data/assignees.json
+# Не редактируй project_task.yml вручную — правь template.yml и JSON.
+
 name: Задача уровня проекта
 description: Шаблон для больших проектных задач (эпиков)
 title: "[EPIC] "
@@ -22,7 +26,7 @@ body:
     id: dependencies
     attributes:
       label: Зависимости
-      description: Ссылки на зависимые задачи (уровня проекта) и комментарии — какие зависимости есть и что с ними делать
+      description: Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать
       placeholder: |
         Примеры:
         - Зависит от: #123, #456
@@ -65,8 +69,7 @@ body:
       label: Целевая дата (если есть)
       placeholder: "YYYY-MM-DD"
 
-  # >>> МНОГОВЫБОР ИСПОЛНИТЕЛЕЙ <<<
-  # В options впиши логины вашей команды (строго GitHub-юзернеймы)
+  # ↓↓↓ Будет заменено сгенерированным списком из data/assignees.json ↓↓↓
   - type: dropdown
     id: assignees
     attributes:
@@ -74,9 +77,6 @@ body:
       description: Кого назначить на задачу (можно выбрать нескольких)
       multiple: true
       options:
-        - user1
-        - user2
-        - user3
-        - "@MaxTro91627"
+{{ASSIGNEE_OPTIONS}}
     validations:
       required: false
