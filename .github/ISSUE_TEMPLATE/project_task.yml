@@ -88,6 +88,6 @@ body:
         - @ivan-petrov - Иван Петров, Backend
         - @maria-smirnova - Мария Смирнова, Frontend
         - @sergey-ivanov - Сергей Иванов, QA
-        - @@MaxTro91627 - Троицкий Максим, PM
+        - @MaxTro91627 - Троицкий Максим, PM
     validations:
       required: false
