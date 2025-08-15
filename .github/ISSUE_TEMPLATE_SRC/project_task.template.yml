@@ -76,6 +76,6 @@ body:
         @login - Имя, Роль
       multiple: true
       options:
-        # {{ASSIGNEE_OPTIONS}}
+# {{ASSIGNEE_OPTIONS}}
     validations:
       required: false
