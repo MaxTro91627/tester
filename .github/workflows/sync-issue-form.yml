@@ -35,7 +35,7 @@ jobs:
             // сортируем по имени, дальше по логину
             people.sort((a,b)=> (a.name || a.login).localeCompare(b.name || b.login, 'ru'));
 
-            const labelFor = (p) => "`@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}`";
+            const labelFor = (p) => `"@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}"`;
             const options = people.map(p => `        - ${labelFor(p)}`).join('\n');
 
             let template = fs.readFileSync(tplPath, 'utf8');
