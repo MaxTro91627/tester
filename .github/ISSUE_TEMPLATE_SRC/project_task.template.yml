@@ -23,7 +23,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: markdown
     id: dependencies
     attributes:
       label: Зависимости
@@ -38,7 +38,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: markdown
     id: subtasks
     attributes:
       label: Подзадачи
@@ -55,7 +55,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: markdown
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
