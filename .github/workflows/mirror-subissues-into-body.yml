@@ -19,9 +19,7 @@ jobs:
             const repo  = context.repo.repo;
             const num   = context.payload.issue.number;
 
-            // 1) Считываем список sub-issues этого issue через REST
-            // (эндпоинты для sub-issues официально доступны в REST API)
-            // В Octokit можно дернуть "сырой" путь:
+            // 1) Забираем sub-issues для текущего issue (если доступны)
             let subIssues = [];
             try {
               const res = await github.request('GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
@@ -33,7 +31,6 @@ jobs:
               core.info('Нет sub-issues или эндпоинт недоступен: ' + e.message);
             }
 
-            // Если сабов нет — просто поставим заглушку, но секцию создадим
             const lines = (subIssues || []).map(si => {
               const box = (si.state === 'closed') ? '[x]' : '[ ]';
               const repoPrefix = (si.repository && si.repository.full_name)
@@ -44,16 +41,17 @@ jobs:
               return `- ${box} ${repoPrefix} — ${si.title}${tail}`;
             });
 
-            const listBlock = lines.length ? lines.join('\n')
+            const listBlock = lines.length
+              ? lines.join('\n')
               : '_Пока нет sub-issues. Используй кнопку **Create sub-issue** ниже описания._';
 
-            // 2) Подготовим новый текст секции с маркерами
+            // 2) Готовим маркированный блок
             const header = '### Подзадачи';
             const startM = '<!-- SUBISSUES-MIRROR:START -->';
             const endM   = '<!-- SUBISSUES-MIRROR:END -->';
             const section = `${header}\n\n${startM}\n${listBlock}\n${endM}\n`;
 
-            // 3) Обновим body: заменим блок между маркерами, при отсутствии — вставим секцию
+            // 3) Обновляем body только в пределах наших маркеров
             const { data: cur } = await github.rest.issues.get({ owner, repo, issue_number: num });
             const body = cur.body || '';
 
@@ -62,13 +60,8 @@ jobs:
             if (blockRe.test(body)) {
               newBody = body.replace(blockRe, `${startM}\n${listBlock}\n${endM}`);
             } else {
-              // Попробуем найти '### Подзадачи' и вставить туда, иначе добавим в конец
               const secRe = new RegExp(`(^|\\n)${header}[\\s\\S]*?(?=\\n###\\s|$)`, 'm');
-              if (secRe.test(body)) {
-                newBody = body.replace(secRe, section.trim());
-              } else {
-                newBody = (body.trim() + '\n\n' + section).trim();
-              }
+              newBody = secRe.test(body) ? body.replace(secRe, section.trim()) : (body.trim() + '\n\n' + section).trim();
             }
 
             if (newBody !== body) {
