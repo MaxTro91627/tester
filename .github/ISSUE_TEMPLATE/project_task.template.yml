@@ -78,7 +78,6 @@ body:
       label: Исполнители
       description: Кого назначить на задачу (можно выбрать нескольких)
       multiple: true
-      options:
-{{ASSIGNEE_OPTIONS}}
+      options: {{ASSIGNEE_OPTIONS}}
     validations:
       required: false
