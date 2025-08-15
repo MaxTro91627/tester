@@ -12,63 +12,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Parse form and assign
+      - name: Parse "Исполнители" and assign
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-
             const issue = context.payload.issue;
             const body  = issue.body || "";
 
-            // Загружаем справочник из JSON
-            let dict = new Map();
-            try {
-              const people = JSON.parse(fs.readFileSync('data/assignees.json', 'utf8'));
-              for (const p of people) {
-                if (!p || !p.login) continue;
-                dict.set((p.label || p.login).trim(), p.login.trim());
-              }
-            } catch(e) {
-              core.warning('Не удалось прочитать data/assignees.json: ' + e.message);
-            }
+            // Собираем словарь "@login - Имя, Роль" -> login
+            const people = JSON.parse(fs.readFileSync('data/assignees.json', 'utf8'));
+            const labelFor = (p) => `@${p.login} - ${p.name}${p.role ? ', ' + p.role : ''}`;
+            const dict = new Map(people.map(p => [labelFor(p), p.login]));
 
-            // Ищем секцию формы "Исполнители"
+            // Ищем секцию "Исполнители"
             const sec = body.match(/###\s*Исполнители[\s\S]*?(?=\n###\s|\n*$)/);
-            if (!sec) {
-              core.info("Секция 'Исполнители' не найдена — выходим.");
-              return;
-            }
+            if (!sec) { core.info("Нет секции 'Исполнители'"); return; }
 
-            // Извлекаем отмеченные пункты чек-листа
-            const pickedLabels = [...sec[0].matchAll(/-\s*\[x\]\s*(.+)\s*$/gm)]
-              .map(m => m[1].trim());
+            // В Issue Forms выбранные пункты рендерятся как чек-лист "- [x] ..."
+            const pickedLabels = [...sec[0].matchAll(/-\s*\[x\]\s*(.+)\s*$/gm)].map(m => m[1].trim());
 
-            if (pickedLabels.length === 0) {
-              core.info("Исполнители не выбраны — выходим.");
-              return;
-            }
-
-            // Сопоставляем label -> login
-            const logins = [];
+            const assignees = [];
             for (const lbl of pickedLabels) {
-              if (/^@?[A-Za-z0-9-]+$/.test(lbl)) {
-                logins.push(lbl.replace(/^@/, ''));
-                continue;
-              }
+              if (dict.has(lbl)) { assignees.push(dict.get(lbl)); continue; }
+              // fallback: попробуем вытащить @login явно
               const m = lbl.match(/@([A-Za-z0-9-]+)/);
-              if (m) { logins.push(m[1]); continue; }
-              const login = dict.get(lbl);
-              if (login) logins.push(login);
+              if (m) assignees.push(m[1]);
             }
 
-            const unique = [...new Set(logins)].slice(0, 10);
-            if (unique.length === 0) {
-              core.info("Нечего назначать.");
-              return;
-            }
-
-            core.info(`Назначаем: ${unique.join(", ")}`);
+            const unique = [...new Set(assignees)].slice(0, 10);
+            if (!unique.length) { core.info("Нечего назначать"); return; }
 
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
