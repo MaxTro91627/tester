@@ -1,0 +1,48 @@
+name: Подзадача
+description: Шаблон для подзадач эпика
+title: "[SUB] "
+labels: ["subtask"]
+
+body:
+  - type: markdown
+    attributes:
+      value: "Заполни форму. Поле «Родительский эпик» обязательно."
+
+  - type: input
+    id: parent
+    attributes:
+      label: Родительский эпик
+      description: "Вставь ссылку на эпик или его номер: #123 или https://github.com/<org>/<repo>/issues/123"
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      placeholder: Кратко опиши подзадачу
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемый результат
+      placeholder: Что считаем готовностью?
+      render: markdown
+    validations:
+      required: true
+
+  # При желании — тот же выпадающий список Исполнителей из вашего JSON
+  - type: dropdown
+    id: assignees
+    attributes:
+      label: Исполнители
+      description: Кого назначить (можно нескольких)
+      multiple: true
+      # список генерится из JSON вашим уже настроенным процессом — можно оставить пустым или скопировать блок из эпика
+      options:
+        - user1
+        - user2
+        - user3
