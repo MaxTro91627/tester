@@ -1,3 +1,4 @@
+# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ ВРУЧНУЮ
 # AUTO-GENERATED TARGET: .github/ISSUE_TEMPLATE/project_task.yml
 # Источник списка исполнителей: data/assignees.json
 # Не редактируй project_task.yml вручную — правь template.yml и JSON.
@@ -77,6 +78,9 @@ body:
       description: Кого назначить на задачу (можно выбрать нескольких)
       multiple: true
       options:
-{{ASSIGNEE_OPTIONS}}
+        - Алина Ким — PM
+        - Иван Петров — Backend
+        - Мария Смирнова — Frontend
+        - Сергей Иванов — QA
     validations:
       required: false
