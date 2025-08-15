@@ -85,7 +85,7 @@ body:
         Список генерируется из data/assignees.json.
       multiple: true
       options:
-                - @ivan-petrov - Иван Петров, Backend
+        -         - @ivan-petrov - Иван Петров, Backend
         - @maria-smirnova - Мария Смирнова, Frontend
         - @sergey-ivanov - Сергей Иванов, QA
         - @MaxTro91627 - Троицкий Максим, PM
