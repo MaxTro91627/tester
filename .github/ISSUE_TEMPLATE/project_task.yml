@@ -11,8 +11,7 @@ labels: ["epic"]
 body:
   - type: markdown
     attributes:
-      value: |
-        Заполни форму ниже. Поля с * обязательны.
+      value: "Заполни форму ниже. Поля с * обязательны."
 
   - type: textarea
     id: context
@@ -27,7 +26,7 @@ body:
     id: dependencies
     attributes:
       label: Зависимости
-      description: Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать
+      description: Ссылки на зависимые задачи и комментарии
       placeholder: |
         Примеры:
         - Зависит от: #123, #456
@@ -42,15 +41,14 @@ body:
     attributes:
       label: Подзадачи
       description: |
-        Это «живой» чеклист. На каждой строке доступна кнопка **Create sub-issue**.
-        Также можно связать уже существующую задачу, указав #<номер> или owner/repo#<номер>.
-        Чекбоксы отмечаются автоматически при закрытии подзадач.
-      placeholder: |
-        - [ ] Нажми «Create sub-issue» на этой строке, чтобы создать связанную задачу
-        - [ ] Или вставь #<номер-issue> чтобы связать существующую: например #123
+        Этот блок автоматически зеркалит системный список **Sub-issues**.
+        Не редактируй его руками — он перезаписывается workflow.
       value: |
-        - [ ] Нажми «Create sub-issue» на этой строке, чтобы создать связанную задачу
-        - [ ] Или вставь #<номер-issue> чтобы связать существующую: например #123
+        ### Подзадачи
+
+        <!-- SUBISSUES-MIRROR:START -->
+        _Здесь появится список sub-issues после сохранения задачи._
+        <!-- SUBISSUES-MIRROR:END -->
       render: markdown
     validations:
       required: true
@@ -59,12 +57,11 @@ body:
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
-      description: Как поймём, что эпик завершён? Критерии приёмки.
+      render: markdown
       placeholder: |
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
-      render: markdown
     validations:
       required: true
 
