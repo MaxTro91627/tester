@@ -1,8 +1,4 @@
 # ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ РУКАМИ
-# AUTO-GENERATED TARGET: .github/ISSUE_TEMPLATE/project_task.yml
-# Источник списка исполнителей: data/assignees.json
-# Не редактируй project_task.yml вручную — правь template.yml и JSON.
-
 name: Задача уровня проекта
 description: Шаблон для больших проектных задач (эпиков)
 title: "[EPIC] "
@@ -24,7 +20,7 @@ body:
     validations:
       required: true
 
-  - type: markdown
+  - type: textarea
     id: dependencies
     attributes:
       label: Зависимости
@@ -40,23 +36,18 @@ body:
       required: true
 
   - type: markdown
-    id: subtasks
     attributes:
-      label: Подзадачи
-      description: |
-        Этот блок автоматически зеркалит системный список **Sub-issues**.
-        Не редактируй его руками — он перезаписывается workflow.
       value: |
         ### Подзадачи
+
+        Этот блок автоматически зеркалит системный список **Sub-issues**.
+        Не редактируй его руками — он перезаписывается workflow.
 
         <!-- SUBISSUES-MIRROR:START -->
         _Здесь появится список sub-issues после сохранения задачи._
         <!-- SUBISSUES-MIRROR:END -->
-      render: markdown
-    validations:
-      required: true
 
-  - type: markdown
+  - type: textarea
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
@@ -82,10 +73,11 @@ body:
       label: Исполнители
       description: |
         Кого назначить на задачу (можно выбрать нескольких).
-        Список генерируется из data/assignees.json.
+        Список генерируется из data/assignees.json в формате:
+        @login - Имя, Роль
       multiple: true
       options:
-        - "@ivanpetrov, Иван Петров, Backend"
+                - "@ivanpetrov, Иван Петров, Backend"
         - "@mariasmirnova, Мария Смирнова, Frontend"
         - "@sergeyivanov, Сергей Мойшаk, QA"
         - "@MaxTro91627, Троицкий Максим, PM"
