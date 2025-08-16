@@ -1,0 +1,102 @@
+# ⚠️ AUTO-GENERATED — НЕ РЕДАКТИРОВАТЬ РУКАМИ
+name: Задача уровня зоны ответственности
+description: Шаблон для задач уровня зоны ответственности (area-level)
+title: "[AREA] "
+labels: ["area"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Заполни форму. Поля с * обязательны. Текст в полях будет рендериться как Markdown после создания issue.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: |
+        Вводные для общего понимания задачи.
+      placeholder: |
+        Что это за зона ответственности? Зачем нужна задача? Кому и какую ценность даёт?
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Зависимости
+      description: |
+        Укажи ссылку на связанную задачу уровня проекта (эпик), если текущая задача является её частью.
+        Опиши блокирующие или зависимые задачи.
+      placeholder: |
+        Примеры:
+        - Связанный эпик: #123
+        - Блокируют: #456, org/other-repo#78
+        Комментарии: ...
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: subtasks
+    attributes:
+      label: Подзадачи (достаточная детализация)
+      description: |
+        Можно перечислить списком, **не обязательно** использовать sub-issues.
+        Если у задачи несколько исполнителей — пропиши ответственных по подзадачам.
+      placeholder: |
+        - [ ] Подготовить список требований — ответственный: @user1
+        - [ ] Согласовать архитектурные решения — @user2
+        - [ ] Настроить мониторинг — @user3
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Краткое описание ожидаемого результата
+      description: |
+        Сразу дай чёткое описание **какой артефакт** будет получен по итогам.
+      placeholder: |
+        Примеры артефактов:
+        - Развёрнуто бекенд-приложение X и оно работает на сервере (или готовый к развертыванию код).
+        - Подготовлена архитектура в нотации C4 уровня контейнеров для согласования с заказчиком.
+        - Сформулированы пользовательские требования (MVP/микро-MVP) в текстовом документе.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Фактический результат
+      description: |
+        Дай ссылку на решённую задачу, отчёт, полученный артефакт **или** PR.
+        Фактический результат должен соответствовать ожидаемому.
+      placeholder: |
+        Примеры:
+        - Итоговый отчёт: https://…
+        - Артефакт: docker image ghcr.io/org/app:tag
+        - PR: #789
+        - Закрытая задача: #456
+      render: markdown
+    validations:
+      required: false
+
+  - type: dropdown
+    id: assignees
+    attributes:
+      label: Исполнители
+      description: |
+        Кого назначить на задачу (можно выбрать нескольких).
+        Формат опций: `@login - Имя, Роль` (подставляется из data/assignees.json).
+      multiple: true
+      options:
+                - "@ivanpetrov, Иван Петров, Backend"
+        - "@mariasmirnova, Мария Смирнова, Frontend"
+        - "@sergeyivanov, Сергей Мойша, QA"
+        - "@MaxTro91627, Троицкий Максим, PM"
+    validations:
+      required: false
