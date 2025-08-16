@@ -30,6 +30,7 @@ body:
         - Зависит от: #123, #456
         - Блокирует: #789
         Комментарии: ...
+      value: |
       render: markdown
     validations:
       required: true
