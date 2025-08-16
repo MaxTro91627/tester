@@ -53,9 +53,10 @@ body:
       description: |
         Как поймём, что эпик завершён? Критерии приёмки.
       placeholder: |
-      " - Пользователь может …
+        Пример:
+        - Пользователь может …
         - Отчёт доступен по …
-        - Метрика X ≥ Y"
+        - Метрика X ≥ Y
       # render: markdown
     validations:
       required: true
