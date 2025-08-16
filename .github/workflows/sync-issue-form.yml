@@ -1,57 +1,83 @@
-name: Sync issue form from JSON
+name: Sync issue forms from JSON
 on:
   push:
     paths:
       - 'data/assignees.json'
-      - '.github/ISSUE_TEMPLATE_SRC/project_task.template.yml'
+      - '.github/ISSUE_TEMPLATE_SRC/*.yml'
   workflow_dispatch:
 
 jobs:
-  build-form:
+  build-forms:
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate .github/ISSUE_TEMPLATE/project_task.yml
+      - name: Generate issue forms
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
 
-            const jsonPath = path.join(process.cwd(), 'data/assignees.json');
-            const tplPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE_SRC/project_task.template.yml');
-            const outPath  = path.join(process.cwd(), '.github/ISSUE_TEMPLATE/project_task.yml');
+            // ---- config
+            const SRC_DIR = '.github/ISSUE_TEMPLATE_SRC';
+            const OUT_DIR = '.github/ISSUE_TEMPLATE';
+            const FILES = [
+              { src: 'project_task.template.yml', out: 'project_task.yml' },
+              { src: 'area_task.template.yml',    out: 'area_task.yml' }
+            ];
+            const PLACEHOLDER = '# {{ASSIGNEE_OPTIONS}}'; // строка в шаблоне
+            const JSON_PATH = 'data/assignees.json';
 
-
-            const people = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+            // ---- read assignees
+            if (!fs.existsSync(JSON_PATH)) {
+              core.setFailed(`Не найден ${JSON_PATH}`);
+              return;
+            }
+            const people = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
             if (!Array.isArray(people)) {
               core.setFailed('data/assignees.json должен быть массивом объектов');
               return;
             }
-
-            // сортируем по имени, дальше по логину
             people.sort((a,b)=> (a.name || a.login).localeCompare(b.name || b.login, 'ru'));
-
             const labelFor = (p) => `"@${p.login}, ${p.name}${p.role ? ', ' + p.role : ''}"`;
-            const options = people.map(p => `        - ${labelFor(p)}`).join('\n');
+            const optionsBlock = people.map(p => `        - ${labelFor(p)}`).join('\n');
 
-            let template = fs.readFileSync(tplPath, 'utf8');
-            if (!template.includes('{{ASSIGNEE_OPTIONS}}')) {
-              core.setFailed('В template.yml не найден плейсхолдер {{ASSIGNEE_OPTIONS}}');
-              return;
+            // ---- ensure OUT_DIR exists
+            fs.mkdirSync(OUT_DIR, { recursive: true });
+
+            // ---- process each template
+            let generated = [];
+            for (const f of FILES) {
+              const srcPath = path.join(SRC_DIR, f.src);
+              if (!fs.existsSync(srcPath)) {
+                core.info(`Шаблон отсутствует, пропускаю: ${srcPath}`);
+                continue;
+              }
+              let tpl = fs.readFileSync(srcPath, 'utf8');
+              if (!tpl.includes(PLACEHOLDER)) {
+                core.setFailed(`В шаблоне ${srcPath} нет плейсхолдера "${PLACEHOLDER}"`);
+                return;
+              }
+              const banner = '# ⚠️ AUTO-GENERATED — НЕ РЕДАКТИРОВАТЬ РУКАМИ\n';
+              const out = banner + tpl.replace(PLACEHOLDER, optionsBlock);
+              const outPath = path.join(OUT_DIR, f.out);
+              fs.writeFileSync(outPath, out, 'utf8');
+              generated.push(outPath);
+              core.info(`Сгенерирован: ${outPath}`);
             }
 
-            const banner = '# ⚠️ AUTO-GENERATED FROM project_task.template.yml + data/assignees.json — НЕ РЕДАКТИРОВАТЬ РУКАМИ\n';
-            const result = banner + template.replace('# {{ASSIGNEE_OPTIONS}}', options);
-
-            fs.writeFileSync(outPath, result, 'utf8');
-            core.info('project_task.yml сгенерирован');
+            if (!generated.length) {
+              core.warning('Нечего генерировать: нет исходных шаблонов в ISSUE_TEMPLATE_SRC.');
+            } else {
+              core.notice(`Готово: ${generated.join(', ')}`);
+            }
 
       - name: Commit changes if any
+        if: success()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: sync issue form from assignees.json"
-          file_pattern: ".github/ISSUE_TEMPLATE/project_task.yml"
+          commit_message: "chore: sync issue forms from assignees.json"
+          file_pattern: ".github/ISSUE_TEMPLATE/*.yml"
