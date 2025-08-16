@@ -27,9 +27,12 @@ body:
       description: |
         Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать.
       placeholder: |
-        Примеры: - Зависит от: #123, #456 - Блокирует: #789
+        Примеры:
+        - Зависит от: #123, #456
+        - Блокирует: #789
         Комментарии: ...
-      render: markdown
+      value: |
+      # render: markdown
     validations:
       required: true
 
@@ -56,7 +59,7 @@ body:
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
-      render: markdown
+      # render: markdown
     validations:
       required: true
 
