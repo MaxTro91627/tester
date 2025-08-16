@@ -31,7 +31,7 @@ body:
         - Блокирует: #789
         Комментарии: ...
       value: |
-      render: markdown
+      # render: markdown
     validations:
       required: true
 
@@ -58,7 +58,7 @@ body:
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
-      render: markdown
+      # render: markdown
     validations:
       required: true
 
