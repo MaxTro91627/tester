@@ -2,7 +2,7 @@ name: Sync issue forms from JSON
 on:
   push:
     paths:
-      - 'data/assignees.json'
+      - '.github/ISSUE_TEMPLATE_SRC/data/assignees.json'
       - '.github/ISSUE_TEMPLATE_SRC/*.yml'
   workflow_dispatch:
 
