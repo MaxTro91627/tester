@@ -20,7 +20,7 @@ body:
     validations:
       required: true
 
-  - type: markdown
+  - type: textarea
     id: dependencies
     attributes:
       label: Зависимости
@@ -28,10 +28,10 @@ body:
         Ссылки на зависимые задачи и комментарии — какие зависимости есть и что с ними делать.
       placeholder: |
         Примеры:
-        '- Зависит от: #123, #456'
-        '- Блокирует: #789'
+        - Зависит от: #123, #456
+        - Блокирует: #789
         Комментарии: ...
-      # render: markdown
+      render: markdown
     validations:
       required: true
 
@@ -47,7 +47,7 @@ body:
         _Здесь появится список sub-issues после сохранения задачи._
         <!-- SUBISSUES-MIRROR:END -->
 
-  - type: markdown
+  - type: textarea
     id: expected
     attributes:
       label: Краткое описание ожидаемого результата
@@ -58,7 +58,7 @@ body:
         - Пользователь может …
         - Отчёт доступен по …
         - Метрика X ≥ Y
-      # render: markdown
+      render: markdown
     validations:
       required: true
 
