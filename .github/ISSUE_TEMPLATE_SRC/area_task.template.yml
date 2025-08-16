@@ -17,7 +17,6 @@ body:
         Вводные для общего понимания задачи.
       placeholder: |
         Что это за зона ответственности? Зачем нужна задача? Кому и какую ценность даёт?
-      render: markdown
     validations:
       required: true
 
@@ -33,7 +32,6 @@ body:
         - Связанный эпик: #123
         - Блокируют: #456, org/other-repo#78
         Комментарии: ...
-      render: markdown
     validations:
       required: false
 
@@ -48,7 +46,6 @@ body:
         - [ ] Подготовить список требований — ответственный: @user1
         - [ ] Согласовать архитектурные решения — @user2
         - [ ] Настроить мониторинг — @user3
-      render: markdown
     validations:
       required: false
 
@@ -63,7 +60,6 @@ body:
         - Развёрнуто бекенд-приложение X и оно работает на сервере (или готовый к развертыванию код).
         - Подготовлена архитектура в нотации C4 уровня контейнеров для согласования с заказчиком.
         - Сформулированы пользовательские требования (MVP/микро-MVP) в текстовом документе.
-      render: markdown
     validations:
       required: true
 
@@ -80,7 +76,6 @@ body:
         - Артефакт: docker image ghcr.io/org/app:tag
         - PR: #789
         - Закрытая задача: #456
-      render: markdown
     validations:
       required: false
 
