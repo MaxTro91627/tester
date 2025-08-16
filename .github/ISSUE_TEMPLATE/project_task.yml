@@ -19,11 +19,6 @@ body:
       placeholder: Зачем нужна задача? Какую проблему решаем? Для кого?
     validations:
       required: true
-      
-  - type: markdown
-    attributes:
-      value: |
-        ---
 
   - type: textarea
     id: dependencies
@@ -43,11 +38,6 @@ body:
   - type: markdown
     attributes:
       value: |
-        ---
-
-  - type: markdown
-    attributes:
-      value: |
         ### Подзадачи
 
         Этот блок автоматически зеркалит системный список **Sub-issues**.
@@ -56,12 +46,6 @@ body:
         <!-- SUBISSUES-MIRROR:START -->
         _Здесь появится список sub-issues после сохранения задачи._
         <!-- SUBISSUES-MIRROR:END -->
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
-
 
   - type: textarea
     id: expected
@@ -77,11 +61,6 @@ body:
       # render: markdown
     validations:
       required: true
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
 
   - type: dropdown
     id: assignees
